@@ -21,10 +21,18 @@ FROM nginx:stable-alpine
 # Copy built assets from build-stage to nginx public directory
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 
-# Copy custom nginx config if needed (optional)
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Create a clean config that handles React routing and port binding
+RUN echo 'server { \
+    listen       8080; \
+    server_name  localhost; \
+    location / { \
+        root   /usr/share/nginx/html; \
+        index  index.html index.htm; \
+        try_files $uri $uri/ /index.html; \
+    } \
+}' > /etc/nginx/conf.d/default.conf
 
 EXPOSE 8080
 
-# Use a shell command to replace the default port 80 with the Cloud Run $PORT variable
-CMD ["/bin/sh", "-c", "sed -i 's/listen  80;/listen '${PORT:-8080}';/g' /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
+# At runtime, replace the hardcoded 8080 with the actual $PORT provided by Cloud Run
+CMD ["/bin/sh", "-c", "sed -i 's/8080/'${PORT:-8080}'/g' /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
