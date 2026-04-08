@@ -1,0 +1,79 @@
+name: Deploy to Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  REGION: us-central1
+
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Google Auth
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+
+      - name: 'Authorize Docker'
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev
+
+      - name: Build and Push Backend
+        run: |
+          docker build -t us-central1-docker.pkg.dev/${{ env.PROJECT_ID }}/closetmind/backend:latest ./backend
+          docker push us-central1-docker.pkg.dev/${{ env.PROJECT_ID }}/closetmind/backend:latest
+
+      - name: Deploy Backend to Cloud Run
+        run: |
+          gcloud run deploy closetmind-backend \
+            --image us-central1-docker.pkg.dev/${{ env.PROJECT_ID }}/closetmind/backend:latest \
+            --region ${{ env.REGION }} \
+            --platform managed \
+            --allow-unauthenticated \
+            --set-secrets="GEMINI_API_KEY=GEMINI_API_KEY:latest,MCP_TOOLBOX_AlloyDB_POSTGRES_URL=DATABASE_URL:latest,GOOGLE_CALENDAR_TOKEN=GOOGLE_CALENDAR_TOKEN:latest"
+
+  deploy-frontend:
+    needs: deploy-backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Google Auth
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+
+      - name: Get Backend URL
+        id: get-url
+        run: |
+          BACKEND_URL=$(gcloud run services describe closetmind-backend --region ${{ env.REGION }} --format 'value(status.url)')
+          echo "BACKEND_URL=$BACKEND_URL" >> $GITHUB_ENV
+          echo "::set-output name=url::$BACKEND_URL"
+
+      - name: Build and Push Frontend
+        run: |
+          docker build \
+            --build-arg VITE_API_BASE_URL=${{ env.BACKEND_URL }} \
+            -t us-central1-docker.pkg.dev/${{ env.PROJECT_ID }}/closetmind/frontend:latest .
+          docker push us-central1-docker.pkg.dev/${{ env.PROJECT_ID }}/closetmind/frontend:latest
+
+      - name: Deploy Frontend to Cloud Run
+        run: |
+          gcloud run deploy closetmind-frontend \
+            --image us-central1-docker.pkg.dev/${{ env.PROJECT_ID }}/closetmind/frontend:latest \
+            --region ${{ env.REGION }} \
+            --platform managed \
+            --allow-unauthenticated

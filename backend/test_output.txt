@@ -1,0 +1,31 @@
+Status: 200
+
+{
+  "status": "success",
+  "data": {
+    "calendar_event": {
+      "event_title": "Plan a 3 day trip to Goa starting May 1st",
+      "location": "Goa",
+      "date": "Today"
+    },
+    "weather_context": "Weather for 'Goa': 17.3\u00b0C, Wind: 7.7 km/h\n\n[CALENDAR SYNC RESULTS]\nCreated: Goa Trip Day 1 Outfit on 2026-05-01 -> https://www.google.com/calendar/event?eid=cXRtODZocDdlZDQyMXY5azhtbjdvZ24ydDggY2xvc2V0bWluZDlAbQ\nCreated: Goa Trip Day 2 Outfit on 2026-05-02 -> https://www.google.com/calendar/event?eid=aWcwcnJwcm00OTJjMm1rbTZhZGRtaXFwZzggY2xvc2V0bWluZDlAbQ\nCreated: Goa Trip Day 3 Outfit on 2026-05-03 -> https://www.google.com/calendar/event?eid=Ym5oaGo0Y28waGFmanBhMGhuZDVtcmloaXMgY2xvc2V0bWluZDlAbQ",
+    "style_tips": "**Weather Note for Goa (May 1st-3rd):** The reported temperature of 17.3\u00b0C is unusually cool for Goa in May, which typically experiences much warmer weather (high 20s to low 30s). Please check a local forecast closer to your travel date as conditions can change. For now, plan for pleasant, cooler days and potentially chilly evenings, making light layers advisable.\n\n---\n\n**Goa Trip Plan: May 1st - 3rd**\n\n**Day 1: Arrival & North Goa Charm (May 1st)**\n*   **Morning/Afternoon:** Arrive in Goa and check into your accommodation, preferably in North Goa (e.g., Anjuna, Vagator, Assagao) for easy access to beaches and vibrant spots. Grab a light, refreshing lunch.\n*   **Afternoon:** Embrace the coastal beauty. Head to **Vagator Beach** or **Anjuna Beach**. Enjoy a stroll, relax by the waves, and perhaps visit the iconic **Chapora Fort** for panoramic views, especially beautiful in the late afternoon.\n*   **Evening:** Enjoy a relaxed dinner at a beachfront shack in Vagator or Anjuna, savoring fresh seafood. With the cooler temperatures, consider a light jacket or scarf for comfort as you dine under the stars.\n\n**Day 2: Historical Riches & Panjim's Pulse (May 2nd)**\n*   **Morning:** Dive into Goa's rich history by visiting **Old Goa**, a UNESCO World Heritage site. Explore the grand **Basilica of Bom Jesus** (housing the relics of St. Francis Xavier) and the majestic **Se Cathedral**.\n*   **Lunch:** Head to **Panjim**, the state capital, and indulge in an authentic Goan thali or fresh seafood at a local restaurant.\n*   **Afternoon:** Wander through the enchanting **Fontainhas (Latin Quarter)** in Panjim, admiring the colorful Portuguese-style houses and narrow lanes. You could also opt for a leisurely sunset cruise on the **Mandovi River** (check availability and timings).\n*   **Evening:** Explore Panjim's culinary scene further. Enjoy dinner at a charming restaurant in the city, perhaps trying some traditional Goan dishes or fusion cuisine.\n\n**Day 3: South Goa Serenity & Departure (May 3rd)**\n*   **Morning:** Journey south for a change of pace. Spend your morning relaxing at one of South Goa's picturesque and calmer beaches like **Palolem Beach** or **Agonda Beach**. Enjoy the tranquil atmosphere, take a swim, or simply unwind with a book.\n*   **Lunch:** Savor a delicious meal at a relaxed beachside restaurant in Palolem or Agonda, soaking in the last of the Goan vibes.\n*   **Afternoon:** Depending on your flight schedule, enjoy some last-minute souvenir shopping, a final dip in the sea, or simply a leisurely coffee by the beach.\n*   **Evening:** Depart from Goa, refreshed and with beautiful memories.\n\n---\n\n**Fashion and Lifestyle Advice:**\n\nGoa is all about embracing an effortlessly chic and laid-back vibe, regardless of the weather. Given the unusually cool May temperatures, pack versatile light layers: think linen shirts, flowy midi-dresses, comfortable shorts, and swimwear, but also include a stylish light jacket, denim, or a chic shawl for the surprisingly cool evenings. Prioritize comfortable sandals or espadrilles for exploring, stay hydrated with fresh coconut water, and allow yourself to surrender to Goa's unique blend of vibrant culture and serene beaches.",
+    "stylist_outfits": [
+      {
+        "combination": 1,
+        "items": [
+          "http://localhost:8000/uploads/product-jpeg-500x500.webp",
+          "http://localhost:8000/uploads/pants.jpg"
+        ]
+      },
+      {
+        "combination": 2,
+        "items": [
+          "http://localhost:8000/uploads/blazer.jpg"
+        ]
+      }
+    ],
+    "vton_result": "http://localhost:8000/uploads/vton-07e24a7b.png",
+    "notes_document": "Packing list prepared."
+  }
+}
