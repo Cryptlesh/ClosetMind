@@ -4,12 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import API_BASE_URL from '../api/config';
 
 const FitVault = () => {
-  const [items, setItems] = useState([
-    { id: 1, image: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=300&auto=format&fit=crop', tags: ['Denim', 'Blue', 'Jacket'], ready: true },
-    { id: 2, image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=300&auto=format&fit=crop', tags: ['White', 'Cotton', 'T-Shirt'], ready: true },
-    { id: 3, image: 'https://images.unsplash.com/photo-1475178626620-a4d074967452?q=80&w=300&auto=format&fit=crop', tags: ['Black', 'Trousers', 'Formal'], ready: true },
-    { id: 4, image: 'https://images.unsplash.com/photo-1603252109303-2751441dd157?q=80&w=300&auto=format&fit=crop', tags: ['Linen', 'Shirt', 'Tan'], ready: true },
-  ]);
+  const [items, setItems] = useState([]);
   const [uploading, setUploading] = useState([]);
 
   useEffect(() => {

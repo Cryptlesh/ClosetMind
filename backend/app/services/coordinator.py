@@ -313,6 +313,10 @@ async def execute_outfit_planning(user_id: str, prompt: str, is_planner: bool = 
             # Resolve local paths
             def get_local_path(url):
                 if not url: return None
+                # Handle relative path from DB (e.g., uploads/file.png)
+                if url.startswith("uploads/"):
+                    return url.replace("/", os.sep)
+                # Handle absolute URL (find /uploads/)
                 idx = url.find("/uploads/")
                 if idx != -1:
                     return url[idx+1:].replace("/", os.sep)
@@ -378,10 +382,9 @@ async def execute_outfit_planning(user_id: str, prompt: str, is_planner: bool = 
                         
                         if image:
                             import uuid
+                            from app.services.storage import storage_service
                             img_name = f"vton-{uuid.uuid4().hex[:8]}.png"
-                            save_path = os.path.join("uploads", img_name)
-                            image.save(save_path)
-                            generated_vton_url = f"uploads/{img_name}"
+                            generated_vton_url = await storage_service.save_image(image, img_name)
                             break
             else:
                 logger.warning(f"Selfie or item paths not found locally: {selfie_path}, items={item_paths}")

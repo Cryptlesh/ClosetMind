@@ -40,7 +40,8 @@ jobs:
             --platform managed \
             --allow-unauthenticated \
             --service-account="closetmind-project@${{ env.PROJECT_ID }}.iam.gserviceaccount.com" \
-            --set-secrets="GEMINI_API_KEY=GEMINI_API_KEY:latest,MCP_TOOLBOX_AlloyDB_POSTGRES_URL=DATABASE_URL:latest,GOOGLE_CALENDAR_TOKEN=GOOGLE_CALENDAR_TOKEN:latest"
+            --set-secrets="GEMINI_API_KEY=GEMINI_API_KEY:latest,MCP_TOOLBOX_AlloyDB_POSTGRES_URL=DATABASE_URL:latest,GOOGLE_CALENDAR_TOKEN=GOOGLE_CALENDAR_TOKEN:latest" \
+            --update-env-vars USE_GCS=true,GCS_BUCKET_NAME=closetmind-vault-closetmind
 
   deploy-frontend:
     needs: deploy-backend
