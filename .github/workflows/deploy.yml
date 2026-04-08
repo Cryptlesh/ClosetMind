@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  REGION: us-central1
+  REGION: asia-south1
 
 jobs:
   deploy-backend:
@@ -25,17 +25,17 @@ jobs:
         uses: 'google-github-actions/setup-gcloud@v2'
 
       - name: 'Authorize Docker'
-        run: gcloud auth configure-docker us-central1-docker.pkg.dev
+        run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
 
       - name: Build and Push Backend
         run: |
-          docker build -t us-central1-docker.pkg.dev/${{ env.PROJECT_ID }}/closetmind/backend:latest ./backend
-          docker push us-central1-docker.pkg.dev/${{ env.PROJECT_ID }}/closetmind/backend:latest
+          docker build -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/closetmind/backend:latest ./backend
+          docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/closetmind/backend:latest
 
       - name: Deploy Backend to Cloud Run
         run: |
           gcloud run deploy closetmind-backend \
-            --image us-central1-docker.pkg.dev/${{ env.PROJECT_ID }}/closetmind/backend:latest \
+            --image ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/closetmind/backend:latest \
             --region ${{ env.REGION }} \
             --platform managed \
             --allow-unauthenticated \
@@ -67,13 +67,13 @@ jobs:
         run: |
           docker build \
             --build-arg VITE_API_BASE_URL=${{ env.BACKEND_URL }} \
-            -t us-central1-docker.pkg.dev/${{ env.PROJECT_ID }}/closetmind/frontend:latest .
-          docker push us-central1-docker.pkg.dev/${{ env.PROJECT_ID }}/closetmind/frontend:latest
+            -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/closetmind/frontend:latest .
+          docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/closetmind/frontend:latest
 
       - name: Deploy Frontend to Cloud Run
         run: |
           gcloud run deploy closetmind-frontend \
-            --image us-central1-docker.pkg.dev/${{ env.PROJECT_ID }}/closetmind/frontend:latest \
+            --image ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/closetmind/frontend:latest \
             --region ${{ env.REGION }} \
             --platform managed \
             --allow-unauthenticated
