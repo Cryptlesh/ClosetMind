@@ -22,15 +22,17 @@ class StorageService:
         """
         Saves a file and returns the accessible path/URL.
         """
-        # Ensure filename is clean
-        filename = os.path.basename(file.filename)
+        import uuid
+        # Generate a unique filename to prevent collisions and handle empty browser filenames
+        ext = os.path.splitext(file.filename)[1] if file.filename else ".jpg"
+        if not ext: ext = ".jpg"
+        unique_filename = f"{uuid.uuid4().hex}{ext}"
         
-        # In cloud, we always save locally first to have a copy for internal processing (like Gemini Vision),
-        # but the "Public" URL we return depends on whether GCS is enabled.
-        local_path = await self._save_to_local_disk(file, filename)
+        # In cloud, we always save locally first to have a copy for internal processing,
+        local_path = await self._save_to_local_disk(file, unique_filename)
         
         if self.use_gcs and self.bucket_name:
-            gcs_url = await self._upload_to_gcs(local_path, filename)
+            gcs_url = await self._upload_to_gcs(local_path, unique_filename)
             if gcs_url:
                 return gcs_url
         
@@ -78,5 +80,44 @@ class StorageService:
                 return gcs_url
 
         return f"uploads/{filename}"
+
+    async def ensure_local_file(self, url: str) -> Optional[str]:
+        """
+        Ensures a file is present on the local disk.
+        If it's a GCS URL and missing locally, it downloads it.
+        Returns the local relative path (e.g., uploads/filename.png).
+        """
+        if not url: return None
+        
+        # 1. Determine the filename from the URL
+        filename = os.path.basename(url)
+        local_path = os.path.join(self.upload_dir, filename)
+        
+        # 2. Check if already present locally
+        if os.path.exists(local_path):
+            return local_path
+            
+        # 3. If missing and it's a GCS URL, download it
+        if "storage.googleapis.com" in url and self.use_gcs:
+            try:
+                from google.cloud import storage
+                client = storage.Client()
+                bucket = client.bucket(self.bucket_name)
+                # Parse blob name (closetmind/filename)
+                # URL format: .../bucket_name/closetmind/filename
+                blob_name = f"closetmind/{filename}"
+                blob = bucket.blob(blob_name)
+                
+                logger.info(f"Downloading {blob_name} from GCS for local processing...")
+                blob.download_to_filename(local_path)
+                return local_path
+            except Exception as e:
+                logger.error(f"Failed to download from GCS: {e}")
+                
+        # 4. If it's a relative path to begin with
+        if url.startswith("uploads/"):
+            return url.replace("/", os.sep)
+            
+        return None
 
 storage_service = StorageService()

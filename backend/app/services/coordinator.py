@@ -310,36 +310,15 @@ async def execute_outfit_planning(user_id: str, prompt: str, is_planner: bool = 
         if combos:
             item_urls = combos[:6]
             
-            # Resolve local paths
-            def get_local_path(url):
-                if not url: return None
-                # Handle relative path from DB (e.g., uploads/file.png)
-                if url.startswith("uploads/"):
-                    return url.replace("/", os.sep)
-                # Handle absolute URL (find /uploads/)
-                idx = url.find("/uploads/")
-                if idx != -1:
-                    return url[idx+1:].replace("/", os.sep)
-                return None
-                
-            selfie_path = get_local_path(selfie_url)
-            # Fallback if no selfie URL in DB but file exists
-            if not selfie_path or not os.path.exists(selfie_path):
-                if os.path.exists("uploads/1.jpg"):
-                    selfie_path = "uploads/1.jpg"
-                elif os.path.exists("../uploads/1.jpg"):
-                    selfie_path = "../uploads/1.jpg"
-                elif os.path.exists("uploads/selfie.png"):
-                    selfie_path = "uploads/selfie.png"
-                elif os.path.exists("../uploads/selfie.png"):
-                    selfie_path = "../uploads/selfie.png"
-                    
+            # Resolve local paths by ensuring they exist (download from GCS if needed)
+            from app.services.storage import storage_service
+            
+            selfie_path = await storage_service.ensure_local_file(selfie_url)
             item_paths = []
             for url in item_urls:
-                p = get_local_path(url)
-                if p and os.path.exists(p):
-                    item_paths.append(p)
-            
+                p = await storage_service.ensure_local_file(url)
+                if p: item_paths.append(p)
+                
             logger.info(f"Resolved paths for i2i: selfie={selfie_path}, items={item_paths}")
             
             if selfie_path and os.path.exists(selfie_path) and item_paths:
