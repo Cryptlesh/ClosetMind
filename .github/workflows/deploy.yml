@@ -39,6 +39,7 @@ jobs:
             --region ${{ env.REGION }} \
             --platform managed \
             --allow-unauthenticated \
+            --service-account="closetmind-project@${{ env.PROJECT_ID }}.iam.gserviceaccount.com" \
             --set-secrets="GEMINI_API_KEY=GEMINI_API_KEY:latest,MCP_TOOLBOX_AlloyDB_POSTGRES_URL=DATABASE_URL:latest,GOOGLE_CALENDAR_TOKEN=GOOGLE_CALENDAR_TOKEN:latest"
 
   deploy-frontend:
@@ -76,4 +77,5 @@ jobs:
             --image ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/closetmind/frontend:latest \
             --region ${{ env.REGION }} \
             --platform managed \
+            --service-account="closetmind-project@${{ env.PROJECT_ID }}.iam.gserviceaccount.com" \
             --allow-unauthenticated
