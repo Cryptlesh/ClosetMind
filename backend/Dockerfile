@@ -27,5 +27,5 @@ RUN mkdir -p uploads
 # Expose the port FastAPI will run on
 EXPOSE 8000
 
-# Command to run the application (using uvicorn)
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Command to run the application (using shell form to support $PORT)
+CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}
