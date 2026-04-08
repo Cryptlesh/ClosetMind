@@ -69,7 +69,7 @@ const ProfileSetup = ({ onComplete }) => {
     }
 
     try {
-      const response = await fetch('http://localhost:8000/api/v1/user/profile', {
+      const response = await fetch(`${API_BASE_URL}/api/v1/user/profile`, {
         method: 'POST',
         body: submitData
       });
