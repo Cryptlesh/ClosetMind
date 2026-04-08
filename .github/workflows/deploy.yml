@@ -57,6 +57,9 @@ jobs:
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v2'
 
+      - name: 'Authorize Docker'
+        run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
+
       - name: Get Backend URL
         id: get-url
         run: |
