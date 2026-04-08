@@ -72,12 +72,8 @@ async def process_vision_batch(file_names: list[str]) -> list:
         tags = ["trendy", "casual"]
         
         try:
-            # Determine local file path
-            file_rel_path = None
-            if url.startswith(settings.BASE_URL):
-                file_rel_path = url.replace(f"{settings.BASE_URL}/", "")
-            elif url.startswith("uploads/"):
-                file_rel_path = url
+            from app.services.storage import storage_service
+            file_rel_path = await storage_service.ensure_local_file(url)
                 
             if file_rel_path and os.path.exists(file_rel_path):
                     with open(file_rel_path, "rb") as f:
