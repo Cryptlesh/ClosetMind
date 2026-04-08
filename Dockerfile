@@ -24,6 +24,7 @@ COPY --from=build-stage /app/dist /usr/share/nginx/html
 # Copy custom nginx config if needed (optional)
 # COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-EXPOSE 80
+EXPOSE 8080
 
-CMD ["nginx", "-g", "daemon off;"]
+# Use a shell command to replace the default port 80 with the Cloud Run $PORT variable
+CMD ["/bin/sh", "-c", "sed -i 's/listen  80;/listen '${PORT:-8080}';/g' /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
