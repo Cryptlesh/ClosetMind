@@ -22,7 +22,7 @@ const Planner = () => {
       const resp = await fetch(`${API_BASE_URL}/api/v1/agents/plan-outfits`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: input, user_id: 'user_123' })
+        body: JSON.stringify({ prompt: input, user_id: 'user_123', is_planner: true })
       });
       const result = await resp.json();
       

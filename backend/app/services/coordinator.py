@@ -120,7 +120,7 @@ async def process_vision_batch(file_names: list[str]) -> list:
     return parsed_results
 
 
-async def execute_outfit_planning(user_id: str, prompt: str) -> dict:
+async def execute_outfit_planning(user_id: str, prompt: str, is_planner: bool = False) -> dict:
     """
     Root Orchestrator (Fit Genie):
     1. Grabs User Location & Selfie + Wardrobe Inventory from AlloyDB.
@@ -206,8 +206,8 @@ async def execute_outfit_planning(user_id: str, prompt: str) -> dict:
     except Exception as e:
         logger.error(f"Weather fetch failed: {e}")
 
-    # 2.5 Trip detection and Calendar Sync via isolated subprocess
-    is_trip = "plan" in prompt.lower() or "trip" in prompt.lower() or "day" in prompt.lower()
+    # 2.5 Trip detection - only active if called from the Planner page
+    is_trip = is_planner
     if is_trip:
         trip_prompt = f"Parse this trip request: '{prompt}'. Return a JSON array of daily outfits like: [{{\"date\": \"2026-05-01\", \"title\": \"Goa Trip Day 1 Outfit\"}}]. Only return valid JSON."
         loop = asyncio.get_running_loop()
