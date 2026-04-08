@@ -72,10 +72,14 @@ async def process_vision_batch(file_names: list[str]) -> list:
         tags = ["trendy", "casual"]
         
         try:
-            # Reconstruct local file path from URL
+            # Determine local file path
+            file_rel_path = None
             if url.startswith(settings.BASE_URL):
                 file_rel_path = url.replace(f"{settings.BASE_URL}/", "")
-                if os.path.exists(file_rel_path):
+            elif url.startswith("uploads/"):
+                file_rel_path = url
+                
+            if file_rel_path and os.path.exists(file_rel_path):
                     with open(file_rel_path, "rb") as f:
                         file_bytes = f.read()
                         

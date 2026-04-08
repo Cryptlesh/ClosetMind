@@ -34,7 +34,7 @@ class StorageService:
             content = await file.read()
             f.write(content)
         logger.info(f"File saved locally: {file_path}")
-        return f"{settings.BASE_URL}/uploads/{filename}"
+        return f"uploads/{filename}"
 
     async def _save_to_gcs(self, file: UploadFile, filename: str) -> str:
         try:
