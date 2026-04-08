@@ -377,7 +377,7 @@ async def execute_outfit_planning(user_id: str, prompt: str, is_planner: bool = 
                             img_name = f"vton-{uuid.uuid4().hex[:8]}.png"
                             save_path = os.path.join("uploads", img_name)
                             image.save(save_path)
-                            generated_vton_url = f"{settings.BASE_URL}/uploads/{img_name}"
+                            generated_vton_url = f"uploads/{img_name}"
                             break
             else:
                 logger.warning(f"Selfie or item paths not found locally: {selfie_path}, items={item_paths}")

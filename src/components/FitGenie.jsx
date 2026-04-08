@@ -39,13 +39,18 @@ const FitGenie = ({ selectedEvent }) => {
   };
 
   const recipes = planData?.stylist_outfits?.slice(0, 1).map((outfit) => {
-    // Check if result is a real URL or a placeholder
-    const isGenerated = planData.vton_result && planData.vton_result.includes('http');
+    // Resolve relative URLs to absolute URLs using API_BASE_URL
+    let imageUrl = null;
+    if (planData.vton_result) {
+      imageUrl = planData.vton_result.startsWith('http') 
+        ? planData.vton_result 
+        : `${API_BASE_URL}/${planData.vton_result}`;
+    }
     
     return {
       id: 1,
       name: `Generated Look`,
-      image: isGenerated ? planData.vton_result : null,
+      image: imageUrl,
       breakdown: outfit.items || []
     };
   }) || [];
@@ -120,7 +125,7 @@ const FitGenie = ({ selectedEvent }) => {
                      // Only render if image exists and is not a default unsplash placeholder
                      (item && !item.includes('unsplash')) && (
                        <div key={i} className="w-16 h-16 rounded-xl overflow-hidden border border-white/10 glass p-1 group/thumb">
-                         <img src={item} alt="Vault Item" className="w-full h-full object-cover rounded-lg group-hover/thumb:scale-110 transition-smooth" />
+                         <img src={item.startsWith('http') ? item : `${API_BASE_URL}/${item}`} alt="Vault Item" className="w-full h-full object-cover rounded-lg group-hover/thumb:scale-110 transition-smooth" />
                        </div>
                      )
                    ))}
