@@ -54,18 +54,13 @@ class StorageService:
             bucket = client.bucket(self.bucket_name)
             blob = bucket.blob(f"closetmind/{filename}")
             
-            # Upload the file from the local disk path
+            logger.info(f"Attempting GCS upload for: {filename}")
             blob.upload_from_filename(local_path)
             
-            # Make the object publicly readable (optional, depends on your bucket policy)
-            # blob.make_public()
-            
-            logger.info(f"File uploaded to GCS bucket {self.bucket_name}: closetmind/{filename}")
-            
-            # Return the public GCS URL
+            logger.info(f"SUCCESS: GCS upload for {filename}")
             return f"https://storage.googleapis.com/{self.bucket_name}/closetmind/{filename}"
         except Exception as e:
-            logger.error(f"Failed to upload to GCS: {e}")
+            logger.error(f"FAILURE: GCS upload for {filename}. Error: {e}")
             return None
 
     async def save_image(self, image, filename: str) -> str:
